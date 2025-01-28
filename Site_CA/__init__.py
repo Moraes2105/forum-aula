@@ -31,11 +31,3 @@ else:
     print("Base de dados já existe!")
 
 from Site_CA import routes
-
-
-
-# GERADOR DE SECRET_KEY:
-# No TERMINAL:
-# Python (enter)
-# Import secrets (enter)
-# Secrets.token_hex(16) (enter)		-	no (16) insira a quantidade desejada de caracteres.
