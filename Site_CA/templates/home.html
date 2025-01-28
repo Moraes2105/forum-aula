@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="container mt-5"></div>
+        <h1 class="text-center text-warning">Comunidade - Aprendendo a programar</h1>
+        <h2 class="text-center text-muted">Alunos, experts e a galera da CA em um só lugar</h2>
+        <hr>
+        {% for post in posts %}
+        <div class="row border mt-4 p-3 meupost bg-light rounded shadow-sm">
+            <div class="col-md-2 text-center">
+                <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" class="img-fluid rounded-circle mb-2" alt="Foto de perfil">
+                <strong>{{ post.autor.username }}</strong>
+                <div class="mt-2">
+                    {% for curso in post.autor.cursos.split(';') %}
+                        <span class="badge bg-success">{{ curso }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-9">
+                <a style="text-decoration: none;" href="{{url_for('exibir_post', id_post=post.id)}}"><h3>{{ post.titulo }}</h3></a>
+                <p>{{ post.corpo }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

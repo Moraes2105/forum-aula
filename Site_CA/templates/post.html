@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="container mt-5"></div>
+        <div class="row border mt-4 p-3 meupost bg-light rounded shadow-sm">
+            <div class="col-md-3 text-center">
+                <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" class="img-fluid rounded-circle mb-2" alt="Foto de perfil">
+                <strong>{{ post.autor.username }}</strong>
+                <div class="mt-2">
+                    {% for curso in post.autor.cursos.split(';') %}
+                        <span class="badge bg-success">{{ curso }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h3>{{ post.titulo }}
+                    <small class="text-mute" style="font-size: 15px"> - Postado em {{ (post.data_criacao).strftime('%d/%m/%Y %H:%M') }}
+                        {% if form %}
+                            - <a href="#form_editar_post"> Editar</a> | <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#delete_post">Excluir</a>
+                        {% endif %}
+                    </small> #TODO Corrigir Fuso horario
+                </h3>
+                    
+                <p>{{ post.corpo }}</p>
+            </div>
+        </div>
+    </div>
+
+{% if form %}
+
+
+    <div class="container">
+        <section class="w-100 px-4 py-5" style="background-color: #9de2ff; border-radius: .0rem .0rem 0 0;">
+        <div class="row d-flex justify-content-center">
+            <div class="col col-md-9 col-lg-7 col-xl-6">
+                <div class="card" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                    <form method="POST" id="form_editar_post">
+                        {{ form.csrf_token }}
+                        <legend>Editar Post</legend>
+                        <div class="mb-3">
+                            <fieldset>
+                                <div class="form-group">
+                                    {{ form.titulo.label(class="form-label") }}
+                                    {% if form.titulo.errors %}
+                                        {{ form.titulo(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for erro in form.titulo.errors %}
+                                                <span>{{ erro }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.titulo(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.corpo.label(class="form-label") }}
+                                    {% if form.corpo.errors %}
+                                        {{ form.corpo(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for erro in form.corpo.errors %}
+                                                <span>{{ erro }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.corpo(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </fieldset>
+                            <div class="mt-2">
+                                {{ form.botao_editar_post(class="btn btn-outline-primary me-1 flex-grow-1") }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endif %}
+
+
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="delete_post" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Excluir Post</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Você tem certeza que deseja excluir o post? (Essa ação não pode ser desfeita)
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <form method="POST" action="{{ url_for('excluir_post', id_post=post.id) }}">
+                <button type="submit" class="btn btn-danger">Excluir Post</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+{% endblock %}
