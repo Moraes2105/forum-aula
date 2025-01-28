@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 import os
+import sqlalchemy
 
 app = Flask(__name__)
 
@@ -18,4 +19,23 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'alert-info'
 
+from Site_CA import models
+engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+inspector = sqlalchemy.inspect(engine)
+if not inspector.has_table("usuario"):
+    with app.app_context():
+        database.drop_all()
+        database.create_all()
+        print("Base de dados criada com sucesso!")
+else:
+    print("Base de dados já existe!")
+
 from Site_CA import routes
+
+
+
+# GERADOR DE SECRET_KEY:
+# No TERMINAL:
+# Python (enter)
+# Import secrets (enter)
+# Secrets.token_hex(16) (enter)		-	no (16) insira a quantidade desejada de caracteres.
